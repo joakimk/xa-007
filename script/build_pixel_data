@@ -1,0 +1,64 @@
+#!/usr/bin/env node
+
+// Generates data that's easy to use in javascript to render something based on pixel positions in an image.
+// scripts/build_pixel_data ~/Desktop/foo.png assets/js/foo.js foo
+//
+// console.log(window.pixelData.foo)
+
+var getPixels = require("get-pixels")
+var fs = require("fs")
+
+let path = process.argv[process.argv.length - 1 - 2]
+let outputPath = process.argv[process.argv.length - 1 - 1]
+let pixelDataName = process.argv[process.argv.length - 1 - 0]
+
+getPixels(path, function (err, pixels) {
+  if (err) {
+    console.log("Bad image path")
+    return
+  }
+
+  let w = pixels.shape[0]
+  let h = pixels.shape[1]
+
+  let index = 0
+
+  // Given an image like:
+  // 0 0
+  // X 0
+
+  // pixels.data is:
+  //[ 0, 0, 0, 0,
+  // 0, 0, 0, 0, 
+  // 255, 0, 0, 255, 
+  // 0, 0, 0, 0 ]
+
+  data = []
+
+  for (let y = 0; y < h; y += 1) {
+    for (let x = 0; x < w; x += 1) {
+      index = (y * 4 * w) + x * 4
+      r = pixels.data[index]
+      g = pixels.data[index + 1]
+      b = pixels.data[index + 2]
+
+      if (r || g || b) {
+        data.push([[x, h - y - 1], [r, g, b]])
+      }
+    }
+  }
+
+  // Given an image like:
+  // X X
+  // X Y
+
+  // The data will be:
+  //[ [ [ 0, 1 ], [ 255, 0, 0 ] ], // top left
+  //[   [ 1, 1 ], [ 255, 0, 0 ] ], // top right
+  //[   [ 0, 0 ], [ 255, 0, 0 ] ], // bottom left
+  //[   [ 1, 0 ], [ 0, 255, 0 ] ] ]  // bottom right
+
+  // X and Y is left to right, bottom to top
+
+  fs.writeFileSync(outputPath, "if(!window.pixelData) { window.pixelData = {} }; window.pixelData." + pixelDataName + " = " + JSON.stringify(data) + "\n")
+})
