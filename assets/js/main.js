@@ -58,7 +58,8 @@ window.afterFirstLoad = () => {
   window.musicSync = new MusicSync(connectToTracker)
 
   if (window.releaseBuild) {
-    loaderDiv.innerHTML = "xAngle - xa-007. Made at Edison 2018. Final version. Press enter to start..."
+    let initiator = ("ontouchstart" in document.documentElement) ? "Touch" : "Press enter"
+    loaderDiv.innerHTML = "<h1>xAngle - xa-007. Made at Edison 2018. Final version.</h1><p>Please use Chrome on desktop or mobile. iOS is not supported.</p><h2>" + initiator + " to start...</h2>"
     document.addEventListener("touchend", touchEndEvent)
 
     window.onkeyup = function (e) {
@@ -77,11 +78,11 @@ window.afterFirstLoad = () => {
 }
 
 function touchEndEvent(e) {
-    if(e.type == "touchend") {
-      window.renderer.setSize(window.resolution.width / 4, window.resolution.height / 4, false)
-      window.startDemo()
-      e.preventDefault();
-    }
+  if (e.type == "touchend") {
+    window.renderer.setSize(window.resolution.width / 4, window.resolution.height / 4, false)
+    window.startDemo()
+    e.preventDefault();
+  }
 }
 
 _setUpFullScreenTrigger = () => {
@@ -97,7 +98,7 @@ _setUpFullScreenTrigger = () => {
   }
 }
 
-_setUpStartDemoTrigger = () =>{
+_setUpStartDemoTrigger = () => {
   window.startDemo = () => {
     window.goFullScreen()
     loaderDiv.innerHTML = "Loading..."
