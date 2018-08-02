@@ -108,6 +108,10 @@ _setUpStartDemoTrigger = () => {
 
       demoDiv.innerHTML = ""
       demoDiv.appendChild(window.renderer.domElement)
+
+      window.renderer.vr.enabled = true
+      demoDiv.appendChild(WEBVR.createButton(window.renderer))
+
       window.musicSync.start()
     }, 1000)
   }
