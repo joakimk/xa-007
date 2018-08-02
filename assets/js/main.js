@@ -77,11 +77,11 @@ window.afterFirstLoad = () => {
 }
 
 function touchEndEvent(e) {
-    if(e.type == "touchend") {
-      window.renderer.setSize(window.resolution.width / 4, window.resolution.height / 4, false)
-      window.startDemo()
-      e.preventDefault();
-    }
+  if (e.type == "touchend") {
+    window.renderer.setSize(window.resolution.width / 4, window.resolution.height / 4, false)
+    window.startDemo()
+    e.preventDefault();
+  }
 }
 
 _setUpFullScreenTrigger = () => {
@@ -90,6 +90,7 @@ _setUpFullScreenTrigger = () => {
 
     for (prop of propNames) {
       if (document.body[prop]) {
+        console.log("DEBUG: fullscreening")
         document.body[prop]();
         break;
       }
@@ -97,13 +98,14 @@ _setUpFullScreenTrigger = () => {
   }
 }
 
-_setUpStartDemoTrigger = () =>{
+_setUpStartDemoTrigger = () => {
   window.startDemo = () => {
     window.goFullScreen()
     loaderDiv.innerHTML = "Loading..."
 
     setTimeout(() => {
       window.afterCodeChange()
+      console.log("DEBUG: Ready to go?")
 
       demoDiv.innerHTML = ""
       demoDiv.appendChild(window.renderer.domElement)

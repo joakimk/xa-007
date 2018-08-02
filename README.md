@@ -39,7 +39,10 @@ Development
 
 Building music data
 
-    echo "window.musicData = \"data:audio/ogg;base64,$(base64 assets/music.ogg)\"" > assets/js/music.js
+    # Not supported on iOS or in Safari
+    # echo "window.musicData = \"data:audio/ogg;base64,$(base64 assets/music.ogg)\"" > assets/js/music.js
+
+    echo "window.musicData = \"data:audio/mpeg;base64,$(base64 assets/music.mp3)\"" > assets/js/music.js
 
 Building rocket data for playback from file
 

@@ -44,6 +44,7 @@ this.MusicSync = class MusicSync {
 
     device.on("ready", () => {
       this._setUpTracks()
+      console.log("DEBUG: Musicready")
 
       this.audio.src = window.musicData
       this.audio.load()
@@ -52,11 +53,17 @@ this.MusicSync = class MusicSync {
 
       if (this.demoMode) {
         return this.audio.addEventListener("canplay", () => {
+          console.log("DEBUG: canplay")
           window.musicPlaying = true
-          return this.audio.play()
+
+          // This does not work, try something else
+          document.addEventListener("touchend", () => {
+            this.audio.play()
+          })
         })
       } else {
         return this.audio.addEventListener("ended", () => {
+          console.log("MusicSync: ended")
           this.audio.currentTime = 0
           return this.audio.play()
         })
@@ -64,6 +71,7 @@ this.MusicSync = class MusicSync {
     })
 
     device.on("update", row => {
+      console.log("MusicSync: row")
       this.row = row
 
       const newTime = this.row / this.row_rate
@@ -85,8 +93,10 @@ this.MusicSync = class MusicSync {
   }
 
   update() {
+    console.log("MusicSync: update")
     this.data = this._getDataForCurrentRow()
 
+    console.log(this.audio.paused)
     if (!this.audio.paused) {
       this.row = this.audio.currentTime * this.row_rate
 
